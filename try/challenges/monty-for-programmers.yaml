@@ -1,0 +1,401 @@
+title:          Monty Basics for Programmers
+author:         Carsten Pfeffer
+date:           2015-12-15
+description:    |
+                Choose this if you already know another programming
+                language. This challenge will show you how Monty differs
+                from other languages.
+levels:
+    - title:    Welcome to Monty
+      type:     text
+      text:     |
+                <p>
+                    Welcome to the Monty Introduction challenge. In this
+                    challenge you will learn the basic concepts of Monty and
+                    get some hands on programming Monty code.
+                </p>
+                <p>
+                    Either type <code>next</code> into the terminal or click
+                    the "<span class="fa fa-arrow-right"></span>"-button to
+                    proceed.
+                </p>
+
+    - title:    Hello World
+      type:     text
+      text:     |
+                <p>
+                    Whether you know programming or not, the first program
+                    shown in a tutorial is always a hello world program.
+                    In Monty it looks like the following:
+                </p>
+                <pre class="cm-s-default">println("Hello World!") // say hello
+                </pre>
+                <p>
+                    The println function prints values in a terminal.
+                    Comments in Monty are introduced by double slashes
+                    <code>//</code>, just like in C++ and Java.
+                    You may try it out by copying the code to the editor and
+                    running the code by pressing <code>CTRL+ENTER</code> or
+                    typing <code>moin</code> into the terminal.
+                </p>
+                <p>
+                    You may also want to try out some other messages like
+                    <code>"Hello Monty"</code> or just <code>"moin"</code>,
+                    which is not only the name of the Monty interpreter,
+                    but also a Low German salutation. When you are done,
+                    you may proceed to the next level.
+                </p>
+    - title:    Basic Data Types
+      type:     text
+      text:     |
+                <h2>Int</h2>
+                <p>
+                    Monty supports a couple of basic data types. A very simple
+                    type is <code>Int</code>. It is used to represent integer
+                    numbers. Integer literals may be written like in many other
+                    languages like C, Java or Python using numbers.
+                </p>
+                <p>
+                    A special fact about <code>Int</code> literals is that Monty
+                    allows you to specify a base in order to write numbers in
+                    different number systems such as
+                    binary (base 2), octal (base 8), hexadecimal (base 16), or
+                    even hexatrigesimal (base 36). The upper bound for a base is
+                    36. The lower bound is 1.
+                </p>
+                <p>
+                <pre class="cm-s-default">println(42)     // 42
+                println(0FF_16) // 255
+                println(101_2)  // 5
+                println(14_10)  // 14</pre>
+                </p>
+                <h2>Float</h2>
+                <p>
+                    The <code>Float</code> type represents floating point
+                    numbers. <code>Float</code> literals can either be written
+                    using the point notation or the exponent notation:
+                </p>
+                <pre class="cm-s-default">println(3.14159263) // pi
+                println(3e-2)       // 0.03
+                println(3e2)        // 300.0</pre>
+                <h2>Bool</h2>
+                <p>
+                    The <code>Bool</code> type contains the boolean values
+                    <code>true</code> and <code>false</code>:
+                </p>
+                <pre class="cm-s-default">println(true)
+                println(false)
+                </pre>
+                <h2>Char</h2>
+                <p>
+                    The <code>Char</code> type is used for single characters,
+                    the default encoding is UTF-8:
+                </p>
+                <pre class="cm-s-default">println('A')
+                println('ü')
+                </pre>
+                <h2>String</h2>
+                <p>
+                    Sequences of characters are represented by the
+                    <code>String</code> type:
+                </p>
+                <pre class="cm-s-default">println("Hello World!")
+                println("❄ ❅ ❆ ❇ ❈ ❉ ❊ ❋")
+                println("\u03C0 is greater that 3")
+                println("Line 1\nLine 2\x00")
+                println("A string with \" a quotation mark ")
+                </pre>
+                The string literals support several escape sequences, introduced
+                by a backslash. The following escape sequences are possible:
+                <table>
+                    <tr>
+                        <td><code>\\</code></td>
+                        <td>backslash</td>
+                    </tr>
+                    <tr>
+                        <td><code>\'</code></td>
+                        <td>single quote</td>
+                    </tr>
+                    <tr>
+                        <td><code>\"</code></td>
+                        <td>double quote</td>
+                    </tr>
+                    <tr>
+                        <td><code>\t</code></td>
+                        <td>horizontal tab</td>
+                    </tr>
+                    <tr>
+                        <td><code>\v</code></td>
+                        <td>vertical tab</td>
+                    </tr>
+                    <tr>
+                        <td><code>\n</code></td>
+                        <td>linefeed</td>
+                    </tr>
+                    <tr>
+                        <td><code>\f</code></td>
+                        <td>formfeed</td>
+                    </tr>
+                    <tr>
+                        <td><code>\r</code></td>
+                        <td>carriage return</td>
+                    </tr>
+                    <tr>
+                        <td><code>\uXXXX</code></td>
+                        <td>a unicode character with 16 bit value XXXX</td>
+                    </tr>
+                    <tr>
+                        <td><code>\xXX</code></td>
+                        <td>a single byte with the 8 bit value XX</td>
+                    </tr>
+                </table>
+                <p>
+                    Feel free to experiment with the code examples and proceed
+                    to the next level.
+                </p>
+
+    - title:    Basic Data Types - Quiz
+      type:     quiz
+      question: |
+                <p>
+                    Okay, now that you have learned about the fundamentals of
+                    Monty's basic data types, here is a simple question for you:
+                    </p>
+                <p>
+                    Which type does the expression <code>"Hello World!"</code>
+                    have?
+                </p>
+      answers:
+            - <code>Char</code>
+            - <code>String</code>
+            - <code>Int</code>
+      solution:     <code>String</code>
+      passMessage:  |
+                    Hey, that was too easy, right? Well, then let's see if you
+                    are also able to answer the next question.
+      failMessage:  |
+                    Hmm, that was not correct. Maybe you think about it try
+                    again.
+
+
+    - title:    Basic Data Types - Quiz 2
+      type:     quiz
+      question: |
+                <p>
+                    Which of the following are valid <code>Int</code> literals?
+                </p>
+                <p>
+                    Remember that Monty has a special syntax for numbers with
+                    different bases. You can also test this using the code
+                    editor.
+                </p>
+      answers:
+            - <code>42</code>
+            - <code>0FF_16</code>
+            - <code>DEF</code>
+            - <code>4.25</code>
+            - <code>101_2</code>
+      solution:
+            - <code>42</code>
+            - <code>0FF_16</code>
+            - <code>101_2</code>
+      failMessage:  |
+                    That was not correct. This question requires you to select
+                    multiple answers. Remember that real numbers can not be
+                    represented by <code>Int</code> values.
+
+    - title:    Variables and Assignments
+      type:     text
+      text:     |
+                <p>
+                    Values can be stored inside variables. Since Monty is
+                    statically typed, the type of a variable has to be
+                    specified when the variable is declared. A variable
+                    declaration in Monty is similar to its counterparts in C++
+                    or Java:
+                </p>
+                <pre class="cm-s-default">Int x
+                Float pi
+                String salutation
+                </pre>
+                <p>
+                    First, the variable type is provided, followed by an
+                    identifier. Variable identifiers must start with a lowercase
+                    letter. If an identifier is written in UPPERCASE_LETTERS,
+                    it is considered to be constant. Mixed-case identifiers with
+                    the first character being a capital letter are reserved for
+                    class names.
+                </p>
+                <p>
+                    Variables can be assigned values using <code>:=</code> as
+                    shown in the following example:
+                </p>
+                <pre class="cm-s-default">x := 5
+                pi := 3.14159263
+                salutation := "Dear Mr. Monty,"
+                </pre>
+                <p>
+                    Further, assignments can be combined with variable
+                    declarations:
+                </p>
+                <pre class="cm-s-default">String firstName := "John"
+                String lastName := "Doe"
+                Int age := 35
+                </pre>
+
+    - title:    Control Structures
+      type:     text
+      text:     |
+                <p>
+                    Monty supports two of the most common control structures,
+                    the <code>if</code> statement and the <code>while</code>
+                    loop. You may have noticed that statements in Monty are not
+                    terminated by semicolons. Further, blocks are not introduced
+                    by curly braces or terminated by <code>end</code> keywords,
+                    but indicated by indentation (if you know Python, you will
+                    find this syntax familiar):
+                </p>
+                <pre class="cm-s-default">Int x := 5
+                if x < 10:
+                    println("x is smaller than 10")
+                elif x < 20:
+                    println("x is smaller than 20 and greater than 9")
+                else:
+                    println("x is greater than 19")
+                </pre>
+                <p>
+                    The indentation inside a block must be consistent. You
+                    should not mix tabs and spaces. In fact, in Python it is
+                    very common to only use spaces (and it is also recommended
+                    in Monty). The code editor on this platform automatically
+                    converts <code>Tab</code> key presses into four spaces
+                    (try it out).
+                </p>
+                <pre class="cm-s-default">Int x := 0
+                while x < 10:
+                    println(x)
+                    x := x + 1
+                println("done")
+                </pre>
+                <p>
+                    The above example shows a <code>while</code> loop which
+                    counts from 0 to 9. The statement <code>x := x + 1</code> is
+                    used to increase <code>x</code> by 1. There is also a
+                    shorthand-notation for this assignment, called a
+                    <i>compound assignment</i>:
+                </p>
+                <pre class="cm-s-default">x += 1 // same as x := x + 1
+                </pre>
+
+    - title:    Control Structures - Cloze
+      type:     cloze
+      text:     |
+                <p>
+                    Now you can prove that you learned the essentials of control
+                    structures in Monty. Fill in the gaps in order to implement
+                    a loop that counts from 2 to 14.
+                </p>
+                <p>
+                    Hint: You may again use the code editor and the Monty
+                    interpreter in order to test your answer before submitting.
+                </p>
+      cloze:    |
+                Int x := ____:
+                while x <= ____:
+                    println(____)
+                    ____ += ____
+      failMessage:  |
+                    That was not correct. If you are not sure how to fill in
+                    the gaps, you can go one step back and look at the 
+                    <code>while</code> loop example.
+      solution:
+            - 2
+            - 14
+            - x
+            - x
+            - 1
+
+    - title:    Functions
+      type:     text
+      text:     |
+                <p>
+                    We learned about basic data types, assignments and
+                    control structures. You were able to answer the questions
+                    and complete the cloze. Now let's have a look at some more
+                    advanced concepts.
+                </p>
+                <p>
+                    Functions can be declared as follows:
+                </p>
+                <pre class="cm-s-default">Int square(Int x):
+                    return x*x
+
+                printSalutation(String name):
+                    print("Dear ")
+                    println(name)
+                </pre>
+                <p>
+                    If a function returns a value, the type of that value has
+                    to be specified, followed by the name of the function
+                    (<code>square</code> in the above example). The variable
+                    declarations inside the round brackets are the function
+                    parameters. If a function does not have any return type,
+                    no return type is provided. Those functions can be called
+                    as follows:
+                </p>
+                <pre class="cm-s-default">Int sq := square(5) // 25
+                printSalutation("Jane") // "Dear Jane"
+                </pre>
+
+    - title:    Write some code!
+      type:     api
+      text:     |
+                <p>
+                    Finally you are ready to write your first Monty function.
+                </p>
+                <p>
+                    Writa a function <code>foo</code> that takes an
+                    <code>Int</code> parameter. If the parameter is even,
+                    the function should just return the parameter. If the
+                    parameter is odd, the function should return the parameter
+                    minus one:
+                </p>
+      code:     |
+                // you may use the following function:
+                Bool isEven(Int number):
+                    return number % 2 = 0
+
+                // your implementation should be done here:
+                Int foo(Int param):
+                    if //...
+                        // ...
+                    else:
+                        // ...
+      post:     |
+                Bool __testFunction():
+                    Bool t1 := foo(1) = 0
+                    Bool t2 := foo(2) = 2
+                    Bool t3 := foo(204) = 204
+                    Bool t4 := foo(1111) = 1110
+                    return t1 and t2 and t3 and t4
+      failMessage:  |
+                    Your code not entirely correct. Try to consider every
+                    possible case.
+      passMessage:  |
+                    Your code seems to be correct. At least our test cases were
+                    not able to find any errors. Congratulation!
+
+    - title:    Congratulations!
+      type:     text
+      text:     |
+                <p>
+                    You made it! You just passed the Monty basic challenge for
+                    programmers. You now should know the most important basic
+                    concepts of Monty and be able to write simple Monty
+                    programs.
+                </p>
+                <p>
+                    Type <code>next</code> or click 
+                    "<span class="fa fa-arrow-right"></span>" to proceed to the
+                    list of challenges.
+                </p>

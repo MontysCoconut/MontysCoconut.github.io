@@ -1,1 +1,184 @@
-Hello Monty
+---
+layout: page
+tagline:
+---
+<p>
+    <h4>
+        Monty is a language that aims to close the gap between scripting and
+        programming languages. 
+    </h4>
+    <br/>
+</p>
+
+<div class="row">
+    <div class="col-md-6 col-lg-3">
+        <div class="panel panel-default">
+            <div class="panel-heading text-center">
+                <h3 class="panel-title">Programming Monty</h3>
+            </div>
+            <div class="panel-body text-center">
+                <center><h1>
+                    <span class="fa fa-gear"></span>
+                </h1></center>
+                <p>
+                    The <em>moco</em> Monty compiler allows you to translate
+                    Monty programs into executable code. The code is available
+                    on Github. In order to run the compiler, you will need Java
+                    and LLVM.
+                </p>
+                <center>
+                    <a href="https://github.com/MontysCoconut/moco"
+                        target="_blank" type="button" class="btn btn-primary">
+                        Get the Compiler
+                    </a>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="panel panel-default">
+            <div class="panel-heading text-center">
+                <h3 class="panel-title">Try it out</h3>
+            </div>
+            <div class="panel-body text-center">
+                <center><h1>
+                    <span class="fa fa-graduation-cap"></span>
+                </h1></center>
+                <p>
+                    You can try out the language online, without installing
+                    anything. The interactive learning platform
+                    <em>Try Monty</em> utilizes the <em>moin</em> Monty
+                    interpreter to execute Monty code in your browser.
+                </p>
+                <center>
+                    <a href="{{ site.BASE_PATH}}/try" target="_blank"
+                        type="button" class="btn btn-primary">
+                        Try Monty Online
+                    </a>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="panel panel-default">
+            <div class="panel-heading text-center">
+                <h3 class="panel-title">Documentation</h3>
+            </div>
+            <div class="panel-body text-center">
+                <center><h1>
+                    <span class="fa fa-book"></span>
+                </h1></center>
+                <p>
+                    The Monty language was specified within the student project
+                    <em>Monty's Coconut</em> at the University of Bremen in
+                    2013 and 2014. You can download the language specification
+                    document from our downloads page.
+                </p>
+                <center>
+                    <a href="{{ site.BASE_PATH}}/downloads.html"
+                        type="button" class="btn btn-primary">
+                        Read the Specification
+                    </a>
+                </center>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <div class="panel panel-default">
+            <div class="panel-heading text-center">
+                <h3 class="panel-title">More Information</h3>
+            </div>
+            <div class="panel-body text-center">
+                <center><h1>
+                    <span class="fa fa-info-circle"></span>
+                </h1></center>
+                <p>
+                    More information on the Mony language and the related
+                    student project can be found here. The
+                    <a href="{{ site.BASE_PATH}}/about.html">About Monty</a>
+                    page contains information about the project, while
+                    <a href="{{ site.BASE_PATH}}/language">The Language</a>
+                    descibes the language itself.
+                </p>
+                <center>
+                    <a href="{{ site.BASE_PATH}}/about.html"
+                        type="button" class="btn btn-primary">
+                        Learn more
+                    </a>
+                </center>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr/>
+
+{% for post in paginator.posts %}
+
+<article class="home">
+
+  <span class="post-date">
+    {% assign d = post.date | date: "%d" | plus:'0' %}
+    {{ post.date | date: "%B" }}
+    {% case d %}
+    {% when 1 or 21 or 31 %}{{ d }}st,
+    {% when 2 or 22 %}{{ d }}nd,
+    {% when 3 or 23 %}{{ d }}rd,
+    {% else %}{{ d }}th,
+    {% endcase %}
+    {{ post.date | date: "%Y" }}
+  </span>
+
+  <h2>
+    <a href="{{ site.BASE_PATH }}{{ post.url }}">{{ post.title }}</a>
+  </h2>
+
+  <div>
+    {% if post.fullview %}
+    {{ post.content }}
+    {% else %}
+    {% if post.shortinfo %}
+    {{ post.shortinfo }}
+    {% elsif post.description %}
+    {{ post.description }}
+    {% else %}
+    {{ post.excerpt }}
+    {% endif %}
+    {% endif %}
+  </div>
+
+</article>
+{% endfor %}
+<hr/>
+
+<ul class="pager"> 
+
+  {% if paginator.previous_page %}
+  <li class="previous">
+    {% if paginator.previous_page == 1 %}
+    <a href="{{ site.BASE_PATH }}/">&larr; Newer</a>
+    {% else %}
+    <a href="{{ site.BASE_PATH }}/{{ site.paginate_path | replace: ':num', paginator.previous_page }}">&larr; Newer</a>
+    {% endif %}
+  </li>
+  {% else %}
+  <li class="previous disabled">
+    <a>&larr; Newer</a>
+  </li>
+  {% endif %}
+  
+  <li>
+    <span class="page_number">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
+  </li>
+
+  {% if paginator.next_page %}
+  <li class="next">
+    <a href="{{ site.BASE_PATH }}/{{ site.paginate_path | replace: ':num', paginator.next_page }}">Older &rarr;</a>
+  </li>
+  {% else %}
+  <li class="next disabled">
+    <a>Older &rarr;</a>        
+  </li>
+  {% endif %}
+
+</ul>

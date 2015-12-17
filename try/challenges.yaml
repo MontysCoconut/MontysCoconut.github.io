@@ -1,0 +1,13 @@
+challenges:
+    - title:        Monty Basics for Programmers
+      author:       Carsten Pfeffer
+      file:         monty-for-programmers
+      description:  |
+                    Choose this if you already know another programming
+                    language. This challenge will show you how Monty differs
+                    from other languages.
+
+    - title:        Test
+      author:       Carsten Pfeffer
+      file:         test
+      description:  just a test. 

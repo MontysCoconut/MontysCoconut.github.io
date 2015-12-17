@@ -1,0 +1,72 @@
+---
+layout: page
+title: The Language
+header: Posts By Category
+group: navigation
+---
+
+<div class="col-lg-6 col-md-9 col-sm-12 text-justify">
+    <h2>About the Language</h2>
+    <p>
+        <em>Monty</em> is a class-based, object-oriented language. Classes,
+        variables and functions are objects. In this way, functions can be
+        used as parameters and return values. This feature can often be found
+        in scripting languages, but not in classic programming languages.
+        As a basic principle every object is defined at any time. Values like
+        <code>nil</code>, <code>null</code> or <code>None</code> do not exist.
+        This decision is based upon
+        <a href="http://en.wikipedia.org/wiki/Tony_Hoare#Apologies_and_retractions" target="_blank">
+            Tony Hoare's
+        </a>
+        statement on his <em>"Billion Dollar Mistake"</em> regarding null
+        references.
+        </p>
+        <p>
+        The fundament of the language is a static type system which is well
+        known from classic programming languages like <em>C++</em> or
+        <em>Java</em>.
+        Static typing has a positive effect on the runtime performance of a
+        programming language. Due to abstract classes and a new operator which
+        allows the extension of objects at runtime, we provide flexible typing
+        mechanisms and improve the development comfort.
+        </p>
+        <p>
+        The syntax is designed as compact as possible, while being as readable
+        as possible. On this account we refrain from using the well known
+        access modifiers <em>public</em>, <em>protected</em> and
+        <em>private</em> and instead use the <em>UML</em> notation for
+        attribute visibility. Also instead of using curly braces to signalize
+        blocks, we use indentation to bring structure into the code (as it is
+        also done in <em>Python</em>).
+        The assignment operator in <em>Monty</em> is not just an equals
+        <code>=</code> symbol, but the mathematically more correct notation
+        <code>:=</code>.
+    </p>
+    <p>
+        You can find the language specification at our
+        <a href="{{ site.BASE_PATH}}/downloads.html">downloads</a> page.
+    </p>
+    <h2>The Compiler</h2>
+    <p>
+        The <em>Monty</em> compiler is entirely developed in <em>Java</em>.
+        We use the parser generator <em><a href="http://www.antlr.org/"
+        target="_blank">ANTLR</em></a> to generate the syntax
+        analysis from the grammar. The context analysis and code generation are
+        implemented in <em>Java</em>, using the design patterns
+        prescribed by <em>ANTLR</em>. The output of the code generation is
+        machine code for the compiler infrastructure <em><a target="_blank"
+        href="http://llvm.org/">LLVM 2</a></em>.
+        This machine code is then either interpreted by the <em>Low Level
+        Virtual Machine (LLVM)</em> or compiled to machine code of the target
+        architecture.
+    </p>
+    <div class="thumbnail">
+        <img src="assets/media/compiler.png"
+             alt="Monty's Compiler Structure"/>
+        <div class="caption">
+            <p><em>Monty's</em> Compiler Structure</p>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div>

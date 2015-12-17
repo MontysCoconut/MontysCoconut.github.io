@@ -1,0 +1,108 @@
+title:          Introduction
+author:         Carsten Pfeffer
+date:           2015-04-29
+description:    |
+                This is the preamble for the Monty tutorial. 
+                It describes the basic concepts and the Monty data model.
+levels:
+    - title:    Welcome to Monty
+      type:     text
+      text:     |
+                <p>
+                    Welcome to the Monty Introduction challenge. In this
+                    challenge you will learn the basic concepts of Monty and
+                    get some hands on programming Monty code.
+                </p>
+                <p>
+                    Type <code>next</code> to proceed.
+                </p>
+
+    - title:    A simple Quiz
+      type:     quiz
+      question: |
+                <p>
+                    The following question has only one correct answer:
+                    </p>
+                <p>
+                    To which value does the expression <code>5 = 7</code>
+                    evaluate?
+                </p>
+      answers:
+            - "true"
+            - "false"
+      solution:     "false"
+      passMessage:  |
+                    Dude, that was too easy, right? Well, then let's see if you
+                    are also able to answer the next question.
+      failMessage:  |
+                    Hmm, that was not correct, Think about it again and maybe
+                    try to use the interactive shell.
+
+
+    - title:    Another Quiz
+      type:     quiz
+      question: |
+                <p>
+                    The following question is a multiple choice one:
+                </p>
+                <p>
+                    Which of the following types are derived from the
+                    <code>Sequence</code> class?
+                </p>
+      answers:
+            - Int
+            - Float
+            - List
+            - Array
+            - Map
+      solution:
+            - List
+            - Array
+
+    - title:    A first cloze
+      type:     cloze
+      text:     |
+                <p>
+                    Write a function <code>add</code> that returns the sum of
+                    its two parameters.
+                </p>
+      cloze:    |
+                Int ____(Int x, Int ____):
+                    return ____ + y
+      solution:
+            - add
+            - y
+            - x
+
+    - title:    Write some code!
+      type:     api
+      text:     |
+                <p>
+                    Write a function <code>printParam</code> that prints its
+                    parameter.
+                </p>
+      code:     |
+                // this function is an example how to print values
+                def printHelloWorld():
+                    print("Hello World!")
+
+                // your implementation should be done here:
+                def printParam(p):
+                    pass
+
+      solution:
+            - foo
+            - param
+
+    - title:    That's it!
+      type:     text
+      text:     |
+                <p>
+                    To be honest, this was just a test of the different level
+                    types which are currently implemented. However, we hope that
+                    you had a little fun with <em>Monty</em> and this tutorial
+                    and we hope to see you back again soon.
+                </p>
+                <p>
+                    Type <code>next</code> to proceed to the list of challenges.
+                </p>

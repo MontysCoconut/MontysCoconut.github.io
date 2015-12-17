@@ -1,0 +1,227 @@
+---
+layout: page
+title: About Monty
+header: Posts By Category
+group: navigation
+---
+
+<div class="col-lg-6 col-md-9 col-sm-12 text-justify">
+    <h2>Background</h2>
+    <p>
+        During one's studies a computer science student is confronted with
+        several different programming languages. Each of those has its own
+        advantages and disadvantages for its certain kind of purpose. There is
+        <em>C/C++</em>, which is extremely fast at runtime, because it is
+        compiled to native machine code. On the other hand it is not very handy
+        to use, especially if we are talking about memory management. Another
+        example is <em>Java</em>, which is more comfortable to use, because it
+        supports garbage collection and some other modern programming language
+        features. The problem about <em>Java</em> is, that it comes with a lot
+        of characteristics inherited from <em>C++</em> which are not very
+        intuitive to use and apart from that <em>Java</em> applications are
+        slower because of the virtual machine architecture. Besides those two
+        examples there are plenty of other languages. Some developers
+        distinguish between scripting and programming languages. Scripting
+        languages usually have a catchy and easily understandable syntax.
+        This supports very fast development and rapid prototyping. Generally
+        the runtime performance of scripted applications is not as good as in
+        classic programming languages, because the scripts are not compiled, but
+        interpreted at runtime. Often another disadvantage of scripting
+        languages is the missing type safety. A good example of that is
+        <em>Python</em>.
+    </p>
+
+    <h2>Motivation</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="thumbnail">
+                <img src="assets/media/tetris.png"
+                  alt="The gap between scripting and programming languages">
+                <div class="caption">
+                    <p>The <em>Monty-Gap</em></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <p>
+            There are already thousands of programming languages. In some
+            cases the differences between them are significant, in other
+            cases they are very similar. So, why should one develop a new
+            programming language?
+            </p>
+            <p>
+            The classic programming languages like <em>C++</em> or
+            <em>Java</em> are mainly about efficient implementations,
+            while scripting languages target more on the ease of use.
+            Between those two worlds there is a gap &hellip; until now.
+            </p>
+            <p>
+            Monty is thought to unite both worlds, without suffering
+            legacy oddities from other languages. As a general purpose
+            language it should provide the highest comfort for
+            developers at the maximum of possible performance.
+            That means that out goal is to design and implement a new
+            language which has both, dynamic and static typing and provides
+            the following features for developers:
+            </p>
+            <ul>
+                <li>intuitive and readable syntax</li>
+                <li>rapid implementation of application ideas (comfort)</li>
+                <li>compiled language (quick execution)</li>
+            </ul>
+        </div>
+    </div>
+    <h2>The Name <em>"Monty"</em></h2>
+    <p>
+        A famous scripting language is <em><a href="http://www.python.org/"
+        target="_blank">Python</em></a> which was named after the British
+        comedy group <em>Monty Python</em>.
+        Accordingly, <em>"Monty"</em> is derived from that name in a similar
+        manner. The name affix "Coconut" is derived from the German title
+        of the movie <em>"Monty Python and the Holy Grail"</em>, which
+        is <em>"Die Ritter der Kokosnuss"</em> (<em>"The Knights of the
+        Coconut"</em>).
+    </p>
+    <h2>Design Paradigms</h2>
+    <p>
+        During the process of outlining <em>Monty's</em> features and
+        behavior, we were faced with the question, how decisions should be
+        made. That's why we came up with our <em>Monty-Planet-Metaphor</em>:
+    </p>
+    <div class="row">
+        <div class="col-sm-3">
+
+            <div class="thumbnail">
+                <a href="#" data-toggle="modal"
+                data-target="#wallpaperModal">
+                <img src="assets/media/th-wallpaper_trans.png"
+                    alt="The Monty Mission"/>
+                </a>
+                <div class="caption">
+                    <p>The <em>Monty-Mission</em></p>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade bs-example-modal-lg" id="wallpaperModal"
+            tabindex="-1" role="dialog"
+            aria-labelledby="wallpaperModalLabel"    aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                    data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                    <h4 class="modal-title"
+                    id="wallpaperModalLabel">The coconuts on their
+                    mission to the planet <em>Monty</em></h4>
+                </div>
+                <div class="modal-body">
+                    <img src="assets/media//wallpaper-1024.jpg"
+                    alt="Wallpaper 1024 x 768 px" style="max-width: 100%;"/>
+                </div>
+                </div>
+            </div>
+            </div>
+
+        </div>
+        <div class="col-sm-9">
+            <p>
+            Imagine there was a planet named <em>Monty</em>. This planet is
+            inhabited by some <em>Montians</em>. These guys are really
+            smart and have a thorough understanding of science and
+            mathematics, but they don't know any kind of programming
+            language. If you were on the <em>Monty-Mission</em> to bring
+            these people a programming language, how should this language
+            look like? Obviously syntactical resemblance to existing
+            languages for the purpose of facilitating migration/adoption
+            doesn't apply here and wouldn't be of much help to the guys on
+            this planet.
+            </p>
+            <p>
+            Whenever we make decisions, we try to come back to this
+            principle.
+            we actually implemented many features which are also
+            present in existing languages &ndash; not just because others
+            did it, but rather because we think they are reasonable.
+            </p>
+        </div>
+    </div>
+
+    <p>
+        Another reference point for making decisions is the
+        <a href="http://legacy.python.org/dev/peps/pep-0020/"
+        target="_blank">Zen of Python</a> by Tim Peters. The <em>Zen of
+        Python</em> includes 19 aphorisms about the design of the programming
+        language Python. Phrases like <em>"Readability counts"</em>,
+        <em>"Errors should never pass silently"</em> or <em>"Explicit is better
+        than implicit"</em> are often cited in discussions about language
+        features.
+    </p>
+
+    <h2>The Project</h2>
+    <p>
+        Monty's Coconut is a student project initiated in winter term
+        2013/2014, also spanning the summer term 2014 at the
+        <a href="http://www.uni-bremen.de/en.html"
+        target="_blank">University of Bremen</a>. Its topic is the design and
+        implementation of a hybrid language being both, a programming language
+        and a scripting language.
+    </p>
+        
+    <img src="assets/media/project.jpg" width="100%"/>
+        
+    <p>
+        At the University of Bremen, a significant part of the computer science
+        master's degree program is the master project. In a master project
+        eight to twenty students work together on a certain research topic or a
+        software project. Usually the topics for master projects are proposed
+        by the teachers or research groups. In this case the project was
+        initiated by students. The project supervisors support the students
+        by providing their expert knowledge and project work experience.
+        However, the project is organized by the students themselves.
+    </p>
+
+    <p>
+        From October until November 2013 we looked at different
+        language concepts and paradigms. Besides we read up on tools and
+        strategies for compiler construction.
+        We presented the first draft of our concepts in December
+        2013, when we were visited by our external advisor
+        David Watt from the University of Glasgow.
+    </p>
+
+    <p>
+        Since January 2014 we have been working in small teams on two major
+        aspects:
+        One is the language definition of <em>Monty</em>, which contains
+        the syntactical, contextual and semantical description
+        of our concepts, as well as a rationale, which is supposed to shed
+        light on the reasoning behind our decisions. which is thought
+        to reason our our decisions. The other big area is the development
+        of a <em>Monty</em> compiler including a detailed documentation
+        of the implementation.
+    </p>
+</div>
+<!-- Tab panes -->
+<!-- <div class="tab-content col-sm-9 col-xs-6">
+  {% for category in site.categories %}
+    <div class="tab-pane" id="{{ category[0] | replace:' ','-' }}-ref">
+      <h2 style="margin-top: 0px">Posts in {{ category[0] | capitalize }}</h2>
+      <ul class="list-unstyled">
+        {% assign pages_list = category[1] %}
+        {% for node in pages_list %}
+          {% if node.title != null %}
+            {% if group == null or group == node.group %}
+              <li style="line-height: 35px;"><a href="{{ site.BASE_PATH }}{{node.url}}">{{node.title}}</a> <span class="text-muted">- {{ node.date | date: "%B %d, %Y" }}</span></li>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        {% assign pages_list = nil %}
+      </ul>
+    </div>
+  {% endfor %}
+</div> -->
+
+<div class="clearfix"></div>

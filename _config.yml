@@ -1,0 +1,30 @@
+# visit https://github.com/mojombo/jekyll/wiki/Configuration for more settings
+
+paginate: 10 # pagination based on number of posts
+paginate_path: "page:num"
+exclude: ["README.md"] # files to exclude
+highlighter: pygments
+markdown: kramdown
+
+defaults:
+  -
+    scope:
+      path: "" # empty string for all files
+    values:
+      title: The Monty programming language
+
+description: The Monty programming language
+author:
+  name: Monty's Coconut
+  email: monty@informatik.uni-bremen.de
+  github: MontysCoconut
+  bio: The best of both worlds
+
+rss_path: feed.xml
+about_path: about.html
+language_path: language.html
+categories_path: categories.html
+downloads_path: downloads.html
+tags_path: tags.html
+
+BASE_PATH:

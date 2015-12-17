@@ -1,0 +1,337 @@
+<html>
+    <head>
+        <title>Try Monty</title>
+        <meta charset="UTF-8"/>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width"/>
+        <meta name="author" content="Christopher Nottrodt and Carsten Pfeffer"/>
+
+        <script type="application/javascript" src="static/js/jquery.js"
+            ></script> 
+        <script type="application/javascript" src="static/js/terminal.js"
+            ></script> 
+        <link rel=stylesheet href="static/codemirror/lib/codemirror.css">
+        <script src="static/codemirror/lib/codemirror.js"></script>
+        <script src="static/codemirror/addon/runmode/runmode.js"></script>
+        <script src="static/codemirror/mode/monty/monty.js"></script>
+        <script src="static/codemirror/addon/edit/matchbrackets.js"></script>
+
+        <link rel="stylesheet" href="static/css/style.css"/>
+        </script>
+    </head>
+    <body>
+
+        <div id="panel-left">
+            <div id="toolbar">
+                <a onclick="loadStaticHtml('index');
+                            setNextFun(loadChallengeOverview);"
+                    title="Home"><span class="fa fa-home"></span></a>
+                <a onclick="loadChallengeOverview()"
+                    title="List of available challenges"
+                    ><span class="fa fa-list"></span></a>
+                <a title="Previous Page" onclick="prev()" class="prev"
+                    ><span class="fa fa-arrow-left"></span></a>
+                <a title="Next Page" class="next" onclick="next()"
+                    ><span class="fa fa-arrow-right"></span></a>
+                <a onclick="showDialogFromStaticHtml('Help', 'help')"
+                    title="Help"
+                    class="pull-right"><span class="fa fa-question"></span></a>
+                <a onclick="showDialogFromStaticHtml('About', 'about')"
+                    title="About"
+                    class="pull-right"><span class="fa fa-group"></span></a>
+            </div>
+            <div id="content">
+                
+            </div>
+            <div id="control">
+                <div id="levelprogress-label">
+                    Level <span>x</span> of <span>x</span>
+                </div>
+                <div id="levelprogress">
+                    <div></div>
+                </div>
+                <span class="btngroup">
+                    <button class="btn prev" onclick="prev()"
+                        ><span class="fa fa-arrow-left"></span></button
+                        ><button class="btn next" onclick="next()"
+                        ><span class="fa fa-arrow-right"></span></button>
+                </span>
+            </div>
+        </div>
+        <div id="panel-splitter">
+        </div>
+        <div id="panel-right">
+            <textarea id="right-editor"></textarea>
+            <div id="throbberplane">
+                <img src="static/img/coconut.png"/>
+            </div>
+            <div id="right-splitter">
+            </div>
+            <div id="right-terminal">
+            </div>
+        </div>
+
+    <div class="modal">
+        <div class="dialog">
+            <h3><span class="title">Title</span> <a onclick="hideDialog()"
+                ><span class="fa fa-times-circle"></span></a></h2>
+            <div class="content">
+                Content
+            </div>
+        </div>
+    </div>
+
+    <script type="application/javascript" src="static/js/js-yaml.min.js">
+        </script>
+    <script type="application/javascript" src="static/js/challenge.js">
+        </script>
+    <script type="application/javascript" src="moin/moin.js"></script>
+
+    <script type="application/javascript">
+    $(document).ready(function(){
+
+        // ---------------------------------------------------------------------
+        // --- load the right-hand-side editor ---------------------------------
+        var cm = createEditor('right-editor');
+
+        // ---------------------------------------------------------------------
+        // --- load the terminal -----------------------------------------------
+        // documentation: https://github.com/tuschcarsten/w3term
+        
+        var term = terminal.init('#right-terminal',
+        {
+            prompt : '$ ',
+            historySize : 4,
+            processCommand : function(cmd, term){
+                if((cmd == "clear")||(cmd == "cls")){
+                    terminal.clear(term);
+                }
+                if(cmd == "moin"){
+                    runCode();
+                }
+                else if(cmd == 'help'){
+                    terminal.print(term,
+                    "This terminal does not contain any <i>help</i> files!");
+                }
+                else if(cmd == 'next'){
+                    if(!next()){
+                        terminal.print(term,
+                        "The command >>next<< is currently not available");
+                    }
+                }
+                else if(cmd == 'prev'){
+                    if(!prev()){
+                        terminal.print(term,
+                        "The command >>prev<< is currently not available");
+                    }
+                }
+                else if(cmd == 'colors'){
+                        terminal.print(term,
+                       "This terminal supports different colors and font styles\n"
+                        +"according to the ANSI escape codes:\n"
+                        + " - \x1B[31mred\x1B[0m color\n"
+                        + " - \x1B[32mgreen\x1B[0m color\n"
+                        + " - \x1B[33myellow\x1B[0m color\n"
+                        + " - \x1B[34mblue\x1B[0m color\n"
+                        + " - \x1B[35mmagenta\x1B[0m color\n"
+                        + " - \x1B[36mcyan\x1B[0m color\n"
+                        + " - \x1B[37mwhite\x1B[0m color\n"
+                        + " - \x1B[41mred\x1B[0m background\n"
+                        + " - \x1B[42mgreen\x1B[0m background\n"
+                        + " - \x1B[43myellow\x1B[0m background\n"
+                        + " - \x1B[44mblue\x1B[0m background\n"
+                        + " - \x1B[45mmagenta\x1B[0m background\n"
+                        + " - \x1B[46mcyan\x1B[0m background\n"
+                        + " - \x1B[47mwhite\x1B[0m background\n"
+                        + " - \x1B[1mbold\x1B[0m font\n"
+                        + " - \x1B[3mitalic\x1B[0m font\n"
+                        + " - \x1B[4munderlined\x1B[0m font\n"
+                        + " - \x1B[5mblinking\x1B[0m font\n"
+                        + " - \x1B[7minverted\x1B[0m font\n"
+                        + " - \x1B[92msuccess\x1B[0m highlighting\n"
+                        + " - \x1B[95mheader\x1B[0m highlighting\n"
+                        + " - \x1B[94minfo\x1B[0m highlighting\n"
+                        + " - \x1B[93mwarning\x1B[0m highlighting\n"
+                        + " - \x1B[91merror\x1B[0m highlighting\n"
+                        + "\n"
+                        + "And this works also with "
+                        + "\x1B[31m\x1B[5m\x1B[4mmultiple styles at once\x1B[0m"
+                       );
+                    }
+                else {
+                    console.log('cmd: "'+cmd+'"');
+                }
+            }
+        });
+        
+        // ---------------------------------------------------------------------
+        // - Hide the dialog ---------------------------------------------------
+
+        $('.modal').fadeOut();
+        $('.dialog').slideUp();
+
+        // ---------------------------------------------------------------------
+        // --- handle splitter movements ---------------------------------------
+
+        var isDragging = false;
+        var splitter = $("#panel-splitter");
+        var panelLeft  = $("#panel-left");
+        var toolbar  = $("#toolbar");
+        var control = $("#control");
+        var panelRight = $("#panel-right");
+        var throbberplane = $('#throbberplane');
+        var throbberplaneMinLeft = parseInt(panelLeft.css("min-width"));
+
+        function setSplitterPosition(x){
+            var totalWidth = $("body").innerWidth();
+            if(totalWidth - x < 50){
+                x = totalWidth -50;
+            }
+            if(x < 50){
+                x = 50;
+            }
+            var widthLeft  = x;
+            var widthRight = totalWidth - (widthLeft+splitter.outerWidth(true));
+
+            panelLeft.css("width", widthLeft+"px");
+            updatePanelWidth();
+            panelRight.css("width", widthRight+"px");
+            throbberplane.css("left", Math.max(widthLeft,
+                                                throbberplaneMinLeft)+8+"px");
+        }
+
+        // set the initial splitter position
+        setSplitterPosition(Math.max($("body").innerWidth()/3, 500));
+
+        splitter.mousedown(function() {
+            $(window).mousemove(function() {
+                isDragging = true;
+                $(window).unbind("mousemove");
+            });
+        });
+        splitter.mouseup(function() {
+            var wasDragging = isDragging;
+            isDragging = false;
+            $(window).unbind("mousemove");
+            if (!wasDragging) { //was clicking
+                $("#throbble").show();
+            }
+        });
+
+        splitter.mousemove(function(event) {
+            if(isDragging){
+                setSplitterPosition(event.pageX);
+            }
+        });
+
+        // ---------------------------------------------------------------------
+        // --- handle right vertical splitter movements ------------------------
+
+        var isRightDragging = false;
+        var rightSplitter = $("#right-splitter");
+        var panelTop  = rightSplitter.prev();
+        var panelBottom = $("#right-terminal");
+
+        function setRightSplitterPosition(y){
+            var totalHeight = $("body").innerHeight();
+            if(totalHeight - y < 50){
+                y = totalHeight -50;
+            }
+            if(y < 50){
+                y = 50;
+            }
+            var heightTop  = y;
+            var heightBottom = totalHeight - (heightTop+rightSplitter.outerHeight(true));
+
+            panelTop.css("height", heightTop+"px");
+            panelBottom.css("height", heightBottom+"px");
+
+            cm.setSize(panelTop.width, heightTop);
+        }
+
+        // set the initial splitter position
+        setRightSplitterPosition(Math.max($("body").innerHeight()/2, 500));
+
+
+        rightSplitter.mousedown(function() {
+            $(window).mousemove(function() {
+                isRightDragging = true;
+                $(window).unbind("mousemove");
+            });
+        });
+        rightSplitter.mouseup(function() {
+            var wasDragging = isRightDragging;
+            isRightDragging = false;
+            $(window).unbind("mousemove");
+            if (!wasDragging) { //was clicking
+                $("#throbble").show();
+            }
+        });
+
+        rightSplitter.mousemove(function(event) {
+            if(isRightDragging){
+                setRightSplitterPosition(event.pageY);
+            }
+        });
+
+
+        // ---------------------------------------------------------------------
+        
+        $(window).resize(function(event){
+            // set the splitter position on window resize
+            setSplitterPosition(panelLeft.outerWidth(true));
+            setRightSplitterPosition(panelTop.outerHeight(true));
+        })
+
+        // ---------------------------------------------------------------------
+        // --- load the initial page (either home or a given challenge) --------
+
+        doRouting();
+
+        window.addEventListener("popstate", function(e) {
+            doRouting();
+        });
+
+
+        // Load the moin monty interpreter
+        function print(msg){
+            terminal.print(term, msg);
+        }
+
+        function onError(err){
+            stopThrobber();
+            if((err.type == "ContextError")||(err.type == "SyntaxError")){
+                terminal.print(term, "\x1B[91m"+err.toString()+"\x1B[0m\n")
+
+                var start = {line: err.pos.line-1, ch : err.pos.column-1};
+                var end = {line: err.endPos.line-1, ch : err.endPos.column-1};
+
+                // cm.setSelection(start, end);
+                cm.markText(start, end, {
+                    className : "faultyCode"
+                });
+                cm.setCursor(start);
+            }
+            else{
+                console.log(err);
+                alert(err);
+            }
+        }
+
+        function runCode(){
+            startThrobber();
+            
+            var code = cm.getValue();
+            moin(code, {
+                print      : print,
+                scriptpath : "moin",
+                err        : onError,
+                done       : function(){
+                    stopThrobber();
+                }
+            });
+        }    
+    });
+    </script>
+    </body>
+</html>
