@@ -1,0 +1,251 @@
+title:          Objects and Classes
+author:         Carsten Pfeffer
+date:           2015-12-17
+description:    |
+                This challenge teaches you how to use classes 
+                and define your own types in Monty.
+levels:
+    - title:    Objects and Types
+      type:     text
+      text:     |
+                <p>
+                    Welcome to the <i>Objects and Classes</i> challenge.
+                    This challenge requires you to know the basic concepts
+                    of Monty. If you don't, please first try to beat the
+                    basic challenge.
+                </p>
+                <p>
+                    Everything in Monty is an object. Strings, integer numbers
+                    and even boolean values are stored as objects.
+                    Every object has a type. The type of an integer number is
+                    <code>Int</code>. The type of a string is
+                    <code>String</code>. Every type of objects supports
+                    different operations. An integer number can be divided
+                    by another integer number. A string can be concatenated
+                    with another string. However, a String can not be divided
+                    by a number.
+                </p>
+                <p>
+                    The set of operations an object supports depends on its
+                    type. Further, a type defines a family of similar object
+                    (like numbers or strings). In the following, you will learn
+                    how to define custom types and how to define operations for
+                    those types.
+                </p>
+                <p>
+                    Either type <code>next</code> into the terminal or click
+                    the "<span class="fa fa-arrow-right"></span>"-button to
+                    proceed.
+                </p>
+
+    - title:    A Simple Class
+      type:     text
+      text:     |
+                <p>
+                    Types can be defined using classes. A class can be seen as
+                    a blueprint for an object. Consider the following example:
+                </p>
+                <pre class="cm-s-default">class Point:
+                    Int x := 0
+                    Int y := 0
+                </pre>
+                <p>
+                    The above defines a class <code>Point</code>, which has
+                    two attributes <code>x</code> and <code>y</code>.
+                    You can now create new point objects using the following
+                    code:
+                </p>
+                <pre class="cm-s-default">Point p := Point()
+                </pre>
+                <p>
+                    The variable <code>p</code> refers a point object,
+                    which has two integer members. You can access the members
+                    of an object using a <code>.</code>:
+                </p>
+                <pre class="cm-s-default">println(p.x)
+                p.y += 1
+                println(p.y)
+                </pre>
+                <p>
+                    This allows you to create complex data types. Maybe you
+                    want to play around a little bit with this example.
+                    Feel free to copy the following code to the editor on the
+                    right panel:
+                </p>
+                <pre class="cm-s-default">class Point:
+                    Int x := 0
+                    Int y := 0
+
+                Point p := Point()  // create a point p
+                p.x := 5            // set the coordinates
+                p.y := 7
+
+                Point q := Point()  // create a point q
+                q.x := 10           // set the coordinates
+                q.y := 3
+
+                print(p.x)          // print x and y of p
+                print(" ")
+                println(p.y)
+
+                print(q.x)          // print x and y of q
+                print(" ")
+                println(q.y)
+                </pre>
+
+    - title:    Classes Recap
+      type:     quiz
+      question: |
+                <p>
+                    Okay, so far, so good. Let's check whether you were able to
+                    memorize the most important facts so far. How do you create
+                    a new instance of the follwing class?
+                </p>
+                <pre class="cm-s-default">class Point:
+                    Int x := 0
+                    Int y := 0
+                </pre>
+      answers:
+            - <code>Point()</code>
+            - <code>new Point()</code>
+            - <code>new Point</code>
+      solution: <code>Point()</code>
+      passMessage: Okay, I guess this was too easy.
+
+    - title:    Initializers
+      type:     text
+      text:     |
+                <p>
+                    Classes may contain any kind of object. Here is an example
+                    of another class:
+                </p>
+                <pre class="cm-s-default">class Person:
+                    String firstName := ""
+                    String lastName := ""
+                    Int age := 0
+
+                Person john := Person()
+                john.firstName := "John"
+                john.lastName := "Doe"
+                john.age := 36
+
+                Person jane := Person()
+                john.firstName := "Jane"
+                john.lastName := "Doe"
+                john.age := 34
+                </pre>
+                <p>
+                    The problem with this class is that the more attributes
+                    a class has, the more cumbersome is the initialization of
+                    all those attributes. Initializing objects can be
+                    done easier using an initializer, as shown in the following
+                    example:
+                </p>
+                <pre class="cm-s-default">class Person:
+                    String firstName
+                    String lastName
+                    Int age
+
+                    initializer(String firstName, String lastName, Int age):
+                        self.firstName := firstName
+                        self.lastName := lastName
+                        self.age := age
+
+                Person john := Person("John", "Doe", 36)
+                Person jane := Person("Jane", "Doe", 34)
+                </pre>
+                <p>
+                    The initializer is a function that is automatically called
+                    when a new instance of its class is created. The arguments
+                    of the instantiation must match the parameters of the
+                    initializer. The <code>self</code> keyword is used to refer
+                    to the current object and to access its features.
+                </p>
+
+    - title:    Methods
+      type:     text
+      text:     |
+                <p>
+                    The initializer is called a <em>method</em>. Methods are
+                    functions that are bound to objects (i.e. defined inside
+                    a class). Inside methods, the <code>self</code> keyword
+                    can be used. Methods are used to implement operations on
+                    types:
+                </p>
+                <pre class="cm-s-default">class Person:
+                    String firstName
+                    String lastName
+                    Int age
+
+                    initializer(String firstName, String lastName, Int age):
+                        self.firstName := firstName
+                        self.lastName := lastName
+                        self.age := age
+
+                    marry(Person partner, Bool changeOwnName):
+                        if changeOwnName:
+                            self.lastName := partner.lastName
+                        else:
+                            partner.lastName := self.lastName
+
+                Person john := Person("John", "Doe", 36)
+                Person jane := Person("Jane", "Miles", 34)
+                jane.marry(john, true)
+                println(jane.lastName)
+                </pre>
+                <p>
+                    The above example adds a marriage operation to the person 
+                    class, which enables a person to marry another person and
+                    change the last name.
+                </p>
+                <p>
+                    Methods can also return values (just like normal functions
+                    do). Proceed to the next level to see how.
+                </p>
+
+    - title:    More Methods
+      type:     cloze
+      text:     |
+                <p>
+                    The following example defines a 2D vector class (similar
+                    to the point example from the previous levels).
+                    The addition of two vectors results in a new vector.
+                    Fill in the gaps in order to implement a correct vector
+                    addition method:
+                </p>
+                <p>
+                    <strong>Hint:</strong> The sum of two vectors is a new
+                    vector that contains the sum of both respective coordinates.
+                </p>
+      cloze:    |
+                class Vector:
+                    Int x
+                    Int y
+
+                    initializer(Int x, Int y):
+                        self.x := x
+                        self.y := y
+
+                    Vector add(Vector other):
+                        return Vector(self.x + ____, self.y + ____)
+
+                Vector a := Vector(2,5)
+                Vector b := Vector(3, 10)
+                Vector c := a.add(b)    // should return Vector(5,15)
+      solution:
+            - other.x
+            - other.y
+
+    - title:    The End
+      type:     text
+      text:     |
+                <p>
+                    That's it for now. Unfortunately, the Monty interpreter
+                    does not support inheritance and access modifiers yet, so
+                    we won't teach you those topics here.
+                </p>
+                <p>
+                    However, you just learned about the basics of classes and
+                    objects in Monty and you were able to solve the tasks and
+                    beat this challenge. Congratulations!
+                </p>

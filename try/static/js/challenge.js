@@ -405,7 +405,13 @@ function renderLevelQuiz(data){
     }
     output += "</fieldset>\n</form\n";
 
-    return output;
+    output = $("<div>"+output+"</div>");
+    output.find("pre").each(function(key, value){
+        var text = htmlDecode(value.innerHTML);
+        CodeMirror.runMode(text, "text/x-monty", value);
+    });
+
+    return output.html();
 }
 
 function renderLevelText(data){

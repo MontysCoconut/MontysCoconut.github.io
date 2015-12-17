@@ -66,28 +66,57 @@ function MtyInterpreter(ast, printfn, readfn){
         return result;
     }
 
-    var _resolveVariable = function(variableName, lvalue){
+    var _resolveVariable = function(variableName, isMemberAccess){
         var blockIndex = _blockStack.length-1;
         var result = undefined;
-        while((result == undefined)&&(blockIndex >= 0)){
-            result = _blockStack[blockIndex].resolveVariable(variableName);
-            blockIndex--;
+        if(isMemberAccess){
+            var classBlock = {blockType : undefined};
+            while((classBlock.blockType != "class")&&(blockIndex >= 0)){
+                classBlock = _blockStack[blockIndex];
+                blockIndex--;
+            }
+            if(classBlock.blockType == "class"){
+                result = classBlock.resolveVariable(variableName);
+            }
         }
-        if(result == undefined){
-            throw new ContextError(currentNode.pos, currentNode.endPos,
-                        currentNode, "The variable '"+currentNode.variableName
-                        +"' could not be resolved.");
+        else {
+            while((result == undefined)&&(blockIndex >= 0)){
+                if((_blockStack[blockIndex].blockType != "class")
+                    ||(_blockStack[blockIndex] == _blockStack.peek()))
+                {
+                    result = _blockStack[blockIndex]
+                                .resolveVariable(variableName);
+                }
+                blockIndex--;
+            }
         }
         return result;
     }
 
-    var _resolveFunction = function(functionName){
+    var _resolveFunction = function(functionName, isMemberAccess){
         var blockIndex = _blockStack.length-1;
         var result = undefined;
         // TODO: overload resolution
-        while((result == undefined)&&(blockIndex >= 0)){
-            result = _blockStack[blockIndex].resolveFunction(functionName);
-            blockIndex--;
+        if(isMemberAccess){
+            var classBlock = {blockType : undefined};
+            while((classBlock.blockType != "class")&&(blockIndex >= 0)){
+                classBlock = _blockStack[blockIndex];
+                blockIndex--;
+            }
+            if(classBlock.blockType == "class"){
+                result = classBlock.resolveFunction(functionName);
+            }
+        }
+        else {
+            while((result == undefined)&&(blockIndex >= 0)){
+                if((_blockStack[blockIndex].blockType != "class")
+                    ||(_blockStack[blockIndex] == _blockStack.peek()))
+                {
+                    result = _blockStack[blockIndex]
+                            .resolveFunction(functionName);
+                }
+                blockIndex--;
+            }
         }
         return result;
     }
@@ -157,8 +186,16 @@ function MtyInterpreter(ast, printfn, readfn){
         // call the initializer (if there is one)
         _blockStack.push(clsDecl.block);
         _blockStack.push(instance.block);
-        _eval(mtyParser.createFunctionCall(node.pos, node.endPos, "initializer",
-                                node.parameters));
+        try{
+            var initCall = mtyParser.createFunctionCall(node.pos, node.endPos,
+                                    "initializer", node.parameters);
+            initCall.isMemberAccess = true;
+            _eval(initCall);
+        } catch(err) {
+            if(err.msg != "The method 'initializer' could not be resolved."){
+                throw(err);
+            }
+        }
         _blockStack.pop();
         _blockStack.pop();
 
@@ -170,7 +207,8 @@ function MtyInterpreter(ast, printfn, readfn){
         if(clsDecl != undefined){
             return classInstantiation(node, clsDecl);
         }else{
-            var funDecl = _resolveFunction(node.functionName);
+            var funDecl = _resolveFunction(node.functionName,
+                                            node.isMemberAccess);
             if(funDecl == undefined){
                 switch(node.functionName){
                     case "print":
@@ -182,8 +220,10 @@ function MtyInterpreter(ast, printfn, readfn){
                         _printfn(""+param.getValue() + "\n");
                         break;
                     default:
+                        var funType = node.isMemberAccess ?
+                                    "method" : "function";
                         throw new ContextError(node.pos, node.endPos, node,
-                            "The function '"+node.functionName
+                            "The "+funType+" '"+node.functionName
                             +"' could not be resolved.");
                 }
             }
@@ -237,7 +277,13 @@ function MtyInterpreter(ast, printfn, readfn){
     */
 
     _actions['VariableAccess'] = function(node, lvalue) {
-        var vardecl = _resolveVariable(node.variableName);
+        var vardecl = _resolveVariable(node.variableName, node.isMemberAccess);
+        if(vardecl == undefined){
+            var varType = node.isMemberAccess ? "attribute" : "variable";
+            throw new ContextError(node.pos, node.endPos,
+                        node, "The "+varType+" '"+node.variableName
+                        +"' could not be resolved.");
+        }
         if(! lvalue){vardecl = vardecl.getValue(); }
         return vardecl;
     }
@@ -314,6 +360,7 @@ function MtyInterpreter(ast, printfn, readfn){
         var left = _eval(node.left).getValue()
         var right;
         _blockStack.push(left.block);
+        node.right.isMemberAccess = true;
         right = _eval(node.right, lvalue);
         _blockStack.pop();
 

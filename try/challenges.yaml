@@ -7,7 +7,10 @@ challenges:
                     language. This challenge will show you how Monty differs
                     from other languages.
 
-    - title:        Test
+    - title:        Objects and Classes
       author:       Carsten Pfeffer
-      file:         test
-      description:  just a test. 
+      file:         classes
+      description:  |
+                    This challenge teaches you how to use classes 
+                    and define your own types in Monty.
+
