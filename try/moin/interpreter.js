@@ -6,7 +6,7 @@ function ContextError(pos, endPos, node, msg){
     this.msg = msg;
 
     this.toString = function(){
-        return this.msg+" "+this.node;
+        return this.msg+"; "+this.node;
     }
 }
 
@@ -45,11 +45,22 @@ function MtyInterpreter(ast, printfn, readfn){
         var val = _returnValue; 
         _returnValue = undefined;
         return val;
-    }
+    };
 
     var _setReturnValue = function(val){
         _returnValue = val;
-    }
+    };
+
+    var _getTypeDist = function(lvalue, rvalue){
+        // TODO: use inheritance
+        if(lvalue.type == "Object"){
+            return 1;
+        }
+        if(lvalue.type != rvalue.type){
+            return -1;
+        }
+        return 0;
+    };
 
     var _resolveSelf = function(){
         var blockIndex = _blockStack.length-1;
@@ -64,7 +75,7 @@ function MtyInterpreter(ast, printfn, readfn){
                         + "inside methods of a class'");
         }
         return result;
-    }
+    };
 
     var _resolveVariable = function(variableName, isMemberAccess){
         var blockIndex = _blockStack.length-1;
@@ -91,7 +102,7 @@ function MtyInterpreter(ast, printfn, readfn){
             }
         }
         return result;
-    }
+    };
 
     var _resolveFunction = function(functionName, isMemberAccess){
         var blockIndex = _blockStack.length-1;
@@ -119,7 +130,7 @@ function MtyInterpreter(ast, printfn, readfn){
             }
         }
         return result;
-    }
+    };
 
     var _resolveClass = function(className){
         var blockIndex = _blockStack.length-1;
@@ -130,7 +141,7 @@ function MtyInterpreter(ast, printfn, readfn){
             blockIndex--;
         }
         return result;
-    }
+    };
 
     // -------------------------------------------------------------------------
     // -- evaluation action functions ------------------------------------------
@@ -202,6 +213,16 @@ function MtyInterpreter(ast, printfn, readfn){
         return instance;
     }
 
+    var formatValue = function(value){
+        var output = ""+value.getValue();
+        if(value.type == "Float"){
+            if(output.indexOf(".") < 0){
+                output += ".0";
+            }
+        }
+        return output;
+    }
+
     _actions['FunctionCall'] = function(node) {
         var clsDecl = _resolveClass(node.functionName);
         if(clsDecl != undefined){
@@ -213,11 +234,11 @@ function MtyInterpreter(ast, printfn, readfn){
                 switch(node.functionName){
                     case "print":
                         var param = _eval(node.parameters[0]);
-                        _printfn(""+param.getValue());
+                        _printfn(""+formatValue(param));
                         break;
                     case "println":
                         var param = _eval(node.parameters[0]);
-                        _printfn(""+param.getValue() + "\n");
+                        _printfn(""+formatValue(param) + "\n");
                         break;
                     default:
                         var funType = node.isMemberAccess ?
@@ -231,6 +252,22 @@ function MtyInterpreter(ast, printfn, readfn){
                 var contents = [];
                 var argc = node.parameters ? node.parameters.length : 0;
                 var parc = funDecl.parameters ? funDecl.parameters.length : 0;
+                var defc = funDecl.parameters.filter(
+                    function(e){return Array.isArray(e);}).length;
+
+                if(argc != parc){
+                    if(defc == 0){
+                        throw new ContextError(node.pos, node.endPos,
+                            node, "The function '"+node.functionName
+                                +"' takes exactly "+parc+" parameters, "
+                                +argc+" were given");
+                    } else if((argc < (parc-defc))||(argc > parc)) {
+                        throw new ContextError(node.pos, node.endPos,
+                            node, "The function '"+node.functionName
+                                +"' takes "+(parc-defc)+" to "+parc
+                                +" parameters, "+argc+" were given");
+                    }
+                }
 
                 for(var i=0; i < parc; i++){
                     if(i < argc){
@@ -291,12 +328,15 @@ function MtyInterpreter(ast, printfn, readfn){
     _actions['Assignment'] = function(node) {
         var lvalue = _eval(node.left, true);
         var rvalue = _eval(node.right);
-        // TODO: type check
+        if(_getTypeDist(lvalue, rvalue) < 0){
+            throw new ContextError(node.pos, node.endPos,
+                        node, "Type error: rhs expression type "+
+                        rvalue.type + " does not match lhs type "+lvalue.type);
+        }
         lvalue.value = rvalue;
     }
 
     _actions['CommandStatement'] = function(node) {
-        // TODO: implement
         switch(node.command){
             case 'return':
                 if(node.argument){
@@ -304,9 +344,9 @@ function MtyInterpreter(ast, printfn, readfn){
                 }
                 _abortBlock = node;
                 break;
-            case 'yield':
+            case 'yield': // TODO: implement
                 break;
-            case 'raise':
+            case 'raise': // TODO: implement
                 break;
             case 'skip': // node.argument always undefined
                 _abortBlock = node;
@@ -372,48 +412,54 @@ function MtyInterpreter(ast, printfn, readfn){
             return _memberAccess(node, lvalue);
         }
 
-        var left = _eval(node.left).getValue();
-        var right = _eval(node.right).getValue();
+        var left = _eval(node.left);
+        var right = _eval(node.right);
 
         // result = new Expression();
         result = mtyParser.createExpression();
         switch(node.op){
             case '+':
-                result.value = left + right;
+                result = _binOpAdd(left, right, result);
                 break;
             case '-':
-                result.value = left - right;
+                result = _binOpSub(left, right, result);
                 break;
             case '*':
-                result.value = left * right;
+                result = _binOpMul(left, right, result);
                 break;
             case '/':
-                result.value = left / right;
+                result = _binOpDiv(left, right, result);
                 break;
             case '%':
-                result.value = left % right;
+                result = _binOpMod(left, right, result);
                 break;
             case '^':
-                result.value = Math.pow(left, right);
+                result = _binOpPow(left, right, result);
                 break;
             case '=':
-                result.value = left === right;
+                result = _binOpEq(left, right, result);
                 break;
             case '!=':
-                result.value = left !== right;
+                result = _binOpNeq(left, right, result);
                 break;
             case '<':
-                result.value = left < right;
+                result = _binOpLt(left, right, result);
                 break;
             case '>':
-                result.value = left > right;
+                result = _binOpGt(left, right, result);
                 break;
             case '<=':
-                result.value = left <= right;
+                result = _binOpLeq(left, right, result);
                 break;
             case '>=':
-                result.value = left >= right;
+                result = _binOpGeq(left, right, result);
                 break;
+        }
+        if(result == undefined){
+            throw new ContextError(node.pos, node.endPos,
+                node, "Unsupported operation '"+node.op
+                    +"' for operand types '"+left.type
+                    +"' and '"+right.type+"'");
         }
         return result;
     }
@@ -449,4 +495,208 @@ function MtyInterpreter(ast, printfn, readfn){
             }
         }
     }
+
+
+    // -------------------------------------------------------------------------
+
+
+    // '+':
+    var _binOpAdd = function(left, right, result){
+        if(left.type == "String"){
+            if((right.type == "String")
+                ||(right.type == "Int")
+                ||(right.type == "Float"))
+            {
+                result.value = left.getValue()+right.getValue();
+                result.type = "String";
+                return result;
+            }
+        }
+        else if(left.type == "Int"){
+            if(right.type == "Int") {
+                result.type = "Int";
+                result.value = left.getValue()+right.getValue();
+                return result;
+            }
+            else if(right.type == "Float"){
+                result.type = "Float";
+                result.value = left.getValue()+right.getValue();
+                return result;
+            }
+        }
+        else if((left.type == "Float")&&((right.type == "Float")
+            ||(right.type == "Int"))) {
+                result.type = "Float";
+                result.value = left.getValue()+right.getValue();
+                return result;
+        }
+    };
+
+     // '-':
+    var _binOpSub = function(left, right, result){
+        if(left.type == "Int"){
+            if(right.type == "Int") {
+                result.type = "Int";
+                result.value = left.getValue()-right.getValue();
+                return result;
+            }
+            else if(right.type == "Float"){
+                result.type = "Float";
+                result.value = left.getValue()-right.getValue();
+                return result;
+            }
+        }
+        else if((left.type == "Float")&&((right.type == "Float")
+            ||(right.type == "Int"))) {
+                result.type = "Float";
+                result.value = left.getValue()-right.getValue();
+                return result;
+        }
+    };
+
+     // '*':
+    var _binOpMul = function(left, right, result){
+        if(left.type == "String"){
+            if(right.type == "Int")
+            {
+                var output = "";
+                for(var i = right.getValue(); i > 0; i--){
+                    output += left.getValue();
+                }
+                result.value = output;
+                result.type = "String";
+                return result;
+            }
+        }
+        else if(left.type == "Int"){
+            if(right.type == "Int") {
+                result.type = "Int";
+                result.value = left.getValue()*right.getValue();
+                return result;
+            }
+            else if(right.type == "Float"){
+                result.type = "Float";
+                result.value = left.getValue()*right.getValue();
+                return result;
+            }
+        }
+        else if((left.type == "Float")&&((right.type == "Float")
+            ||(right.type == "Int"))) {
+                result.type = "Float";
+                result.value = left.getValue()*right.getValue();
+                return result;
+        }
+    };
+
+     // '/':
+    var _binOpDiv = function(left, right, result){
+        if(left.type == "Int"){
+            if(right.type == "Int") {
+                result.type = "Int";
+                result.value = Math.floor(left.getValue()/right.getValue());
+                return result;
+            }
+            else if(right.type == "Float"){
+                result.type = "Float";
+                result.value = left.getValue()/right.getValue();
+                return result;
+            }
+        }
+        else if((left.type == "Float")&&((right.type == "Float")
+            ||(right.type == "Int"))) {
+                result.type = "Float";
+                result.value = left.getValue()/right.getValue();
+                return result;
+        }
+    };
+
+     // '%':
+    var _binOpMod= function(left, right, result){
+        if((left.type == "Int")&&(right.type == "Int")) {
+            result.type = "Int";
+            result.value = left.getValue()%right.getValue();
+            return result;
+        }
+    };
+
+     // '^':
+    var _binOpPow = function(left, right, result){
+        if(left.type == "Int"){
+            if(right.type == "Int") {
+                result.type = "Int";
+                result.value = Math.pow(left.getValue(), right.getValue());
+                return result;
+            }
+            else if(right.type == "Float"){
+                result.type = "Float";
+                result.value = Math.pow(left.getValue(), right.getValue());
+                return result;
+            }
+        }
+        else if((left.type == "Float")&&((right.type == "Float")
+            ||(right.type == "Int"))) {
+                result.type = "Float";
+                result.value = Math.pow(left.getValue(), right.getValue());
+                return result;
+        }
+    };
+
+     // '=':
+    var _binOpEq = function(left, right, result){
+        result.value = (left.getValue() === right.getValue())
+                        && (left.type == right.type);
+        result.type = "Bool";
+        return result;
+    };
+
+     // '!=':
+    var _binOpNeq = function(left, right, result){
+        result = _binOpEq(left, right, result);
+        result.value = !(result.value);
+        return result;
+    };
+
+     // '<':
+    var _binOpLt = function(left, right, result){
+        if(((left.type == "Int")||(left.type == "Float"))
+            &&((right.type == "Int")||(right.type == "Float"))){
+
+            result.value = left.getValue() < right.getValue();
+            result.type = "Bool";
+            return result;
+        }
+    };
+
+     // '>':
+    var _binOpGt = function(left, right, result){
+                if(((left.type == "Int")||(left.type == "Float"))
+            &&((right.type == "Int")||(right.type == "Float"))){
+
+            result.value = left.getValue() > right.getValue();
+            result.type = "Bool";
+            return result;
+        }
+    };
+
+     // '<=':
+    var _binOpLeq = function(left, right, result){
+                if(((left.type == "Int")||(left.type == "Float"))
+            &&((right.type == "Int")||(right.type == "Float"))){
+
+            result.value = left.getValue() <= right.getValue();
+            result.type = "Bool";
+            return result;
+        }
+    };
+
+     // '>=':
+    var _binOpGeq = function(left, right, result){
+        if(((left.type == "Int")||(left.type == "Float"))
+            &&((right.type == "Int")||(right.type == "Float"))){
+
+            result.value = left.getValue() >= right.getValue();
+            result.type = "Bool";
+            return result;
+        }
+    };
 }

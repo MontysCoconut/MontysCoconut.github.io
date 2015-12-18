@@ -70,7 +70,7 @@ function moin(code, options){
 
     var startWithoutWorker = function(){
         try{
-            var ast = mtyParser.parse(code);
+            var ast = mtyParser.parse(code+"\n");
             var interpreter = new MtyInterpreter(ast, print);
             interpreter.run();
         }
