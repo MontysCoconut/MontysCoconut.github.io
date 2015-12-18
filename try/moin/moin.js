@@ -43,7 +43,7 @@ function moin(code, options){
         scriptpath += "/"
     }
 
-    var start = function(){
+    var startWorker = function(){
         var worker = new Worker(scriptpath+"worker.js");
         if(err){
             worker.addEventListener("error", err);
@@ -68,16 +68,36 @@ function moin(code, options){
         worker.postMessage({cmd:"run", code:code}); // Start the worker.
     }
 
+    var startWithoutWorker = function(){
+        try{
+            var ast = mtyParser.parse(code);
+            var interpreter = new MtyInterpreter(ast, print);
+            interpreter.run();
+        }
+        catch(error){
+            err(error);
+        }
+        done();
+    }
+
     if((!mtyParser)||(MtyInterpreter === undefined)){
         loadScripts([scriptpath+"parser.js",
                     scriptpath+"interpreter.js"],
         function(){
-            start();
+            if(typeof(Worker) !== "undefined") {
+                startWorker();
+            }
+            else{
+                setTimeout(function(){startWithoutWorker();}, 10);
+            }
         });
     }
     else{
-        start();
+        if(typeof(Worker) !== "undefined") {
+            startWorker();
+        }
+        else{
+            setTimeout(function(){startWithoutWorker();}, 10);
+        }
     }
-
-
 }
