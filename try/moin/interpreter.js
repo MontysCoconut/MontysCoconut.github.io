@@ -388,12 +388,33 @@ function MtyInterpreter(ast, printfn, readfn){
     }
 
     _actions['UnaryExpression'] = function(node) {
-        switch(node.operator){
+        var result = mtyParser.createExpression();
+        var exp = _eval(node.expression);
+        switch(node.op){
             case '-':
+                if((exp.type == "Int")||(exp.type == "Float")){
+                    result.value = exp.getValue()*-1;
+                    result.type = exp.type;
+                }
+                else{
+                    throw new ContextError(node.pos, node.endPos, node,
+                        "Unsupported operand of type '"+exp.type
+                        +"' for unary minus");
+                }
                 break;
             case 'not':
+                if(exp.type == "Bool"){
+                    result.value = !exp.getValue();
+                    result.type = exp.type;
+                }
+                else{
+                    throw new ContextError(node.pos, node.endPos, node,
+                        "Unsupported operand of type '"+exp.type
+                        +"' for 'not' operator");
+                }
                 break;
         }
+        return result;
     }
 
     var _memberAccess = function(node, lvalue){
@@ -416,7 +437,7 @@ function MtyInterpreter(ast, printfn, readfn){
         var right = _eval(node.right);
 
         // result = new Expression();
-        result = mtyParser.createExpression();
+        var result = mtyParser.createExpression();
         switch(node.op){
             case '+':
                 result = _binOpAdd(left, right, result);
